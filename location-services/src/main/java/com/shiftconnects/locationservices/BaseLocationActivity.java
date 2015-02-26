@@ -46,10 +46,17 @@ import java.util.List;
 
 
 /**
- * Base activity that should be extended if sub activities want location data. This activity handles
- * binding to Google Play Services and also manages the LocationClient. To make location requests,
- * subclasses should call #onLocationServicesConnected passing in a {@link com.google.android.gms.location.LocationRequest}.
+ * Base activity that should be extended if sub activities want location data. This activity allows
+ * subclasses to avoid managing their own Google client services. Subclasses should use this class by
+ * calling bindLocationManager() in onResume (or similar), and then waiting for a callback in
+ * onLocationServicesAvailable().
+ *
+ * Once that callback happens, set up your {@link com.google.android.gms.location.LocationRequest} and
+ * pass it into requestLocationUpdates().
+ *
  * Subclasses will then receive location updates in #onLocationChanged
+ *
+ * Be sure to call unbindLocationManager() when you no longer need location updates.
  */
 public abstract class BaseLocationActivity extends ActionBarActivity implements GpsStatus.Listener,
         BackgroundLocationService.ConnectionCallbacks, BackgroundLocationService.LocationCallbacks,

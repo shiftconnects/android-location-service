@@ -52,8 +52,6 @@ import java.util.List;
  *          </intent-filter>
  *
  * </service>
- *
- * Created by mattkranzler on 4/28/14. Updated by mattruno.
  */
 public class BackgroundLocationService extends Service implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
