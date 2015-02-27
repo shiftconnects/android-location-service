@@ -1,0 +1,1 @@
+This is the initial public release of android-location-services.
