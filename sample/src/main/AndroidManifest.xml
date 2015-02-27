@@ -7,7 +7,8 @@
 
     <application
         android:allowBackup="true"
-        android:label="@string/app_name" >
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher">
 
         <activity
             android:name=".MainActivity"
@@ -20,7 +21,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.shiftconnects.locationservice.BackgroundLocationService"
+        <service android:name="com.shiftconnects.android.location.BackgroundLocationService"
                  android:exported="false">
             <intent-filter>
                 <action android:name="com.shiftconnects.android.ACTION_GEOFENCE_TRANSITION"/>

@@ -4,8 +4,8 @@ apply plugin: 'android-maven'
 uploadArchives {
     repositories {
         mavenInstaller {
-            pom.groupId = 'com.shiftconnects.locationservice'
-            pom.version = '1.2.0'
+            pom.groupId = 'com.shiftconnects.android.location'
+            pom.version = '1.3.0'
             pom.artifactId = 'location-service'
             pom.project {
                 licenses {
@@ -27,7 +27,7 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 21
-        versionName "1.2.0"
+        versionName "1.3.0"
     }
     buildTypes {
         release {

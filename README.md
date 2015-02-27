@@ -5,7 +5,7 @@ Using android-location-activity is as easy as including and starting the backgro
 The ```BackgroundLocationService``` provides a whole suite of useful methods (via callbacks).
 
 # To Use / Dependencies
-    compile('com.shiftconnects.android:location-activity:1.0.0@aar'){
+    compile('com.shiftconnects.android.location:location-service:1.3.0'){
         transitive=true
     } 
 If you do not wish to pull in our version of the Play Services, feel free to ignore the transitive=true flag. If you do this, you will need to provide your own versions of the play services dependencies...

@@ -37,7 +37,7 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationRequest;
-import com.shiftconnects.locationservice.BackgroundLocationService;
+import com.shiftconnects.android.location.BackgroundLocationService;
 
 
 public class MainActivity extends ActionBarActivity implements GpsStatus.Listener, BackgroundLocationService.ConnectionCallbacks, BackgroundLocationService.LocationCallbacks {
