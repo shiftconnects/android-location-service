@@ -60,20 +60,12 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
 
     private final IBinder mBinder = new LocalBinder();
 
-    public static interface DataCallback {
-        void onNewLocation(Location location);
-        void onGeofenceError(GeofencingEvent event);
-        void onGeofencesSetupSuccessful();
-        void onGeofencesSetupUnsuccessful(Status status);
-        void onLocationServicesConnectionFailed(ConnectionResult connectionResult);
-        void onLocationServicesConnectionSuspended(int cause);
-    }
-
     public static interface LocationCallbacks {
         void onLocationChanged(Location location);
     }
 
     public static interface ConnectionCallbacks {
+        void onConnectionSuspended(int flag);
         void onLocationServicesConnectionSuccessful();
         void onLocationServicesConnectionFailed(ConnectionResult connectionResult);
     }
@@ -82,13 +74,15 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
         void onGeofenceEntered(String geofenceId);
         void onGeofenceDwelled(String geofenceId);
         void onGeofenceExited(String geofenceId);
+        void onGeofenceError(GeofencingEvent event);
+        void onGeofencesSetupSuccessful();
+        void onGeofencesSetupUnsuccessful(Status status);
     }
 
     private static final String TAG = BackgroundLocationService.class.getSimpleName();
 
     private GoogleApiClient mGoogleApiClient;
 
-    private DataCallback mDataCallback;
     private List<LocationCallbacks> mLocationCallbacks;
     private List<ConnectionCallbacks> mConnectionCallbacks;
     private List<GeofenceCallbacks> mGeofenceCallbacks;
@@ -126,8 +120,10 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
                 GeofencingEvent event = GeofencingEvent.fromIntent(intent);
                 if (event.hasError()) {
                     Log.w(TAG, "Received a geofence event with an error!");
-                    if( null != mDataCallback ){
-                        mDataCallback.onGeofenceError(event);
+                    if( null != mGeofenceCallbacks ){
+                        for( GeofenceCallbacks cb : mGeofenceCallbacks ) {
+                            cb.onGeofenceError(event);
+                        }
                     }
                 } else {
                     switch (event.getGeofenceTransition()) {
@@ -164,10 +160,6 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
     }
 
     // region callbacks
-
-    public void setDataCallback(DataCallback callbacks){
-        this.mDataCallback = callbacks;
-    }
 
     public boolean addLocationCallbacks(LocationCallbacks callbacks) {
         if (mLastLocation != null) {
@@ -251,12 +243,16 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
                 public void onResult(Status status) {
                     if (status.isSuccess()) {
                         Log.d(TAG, "Successfully setup geofences.");
-                        if( null != mDataCallback ){
-                            mDataCallback.onGeofencesSetupSuccessful();
+                        if( null != mGeofenceCallbacks ){
+                            for( GeofenceCallbacks cb : mGeofenceCallbacks ) {
+                                cb.onGeofencesSetupSuccessful();
+                            }
                         }
                     } else {
-                        if( null != mDataCallback ){
-                            mDataCallback.onGeofencesSetupUnsuccessful(status);
+                        if( null != mGeofenceCallbacks ){
+                            for( GeofenceCallbacks cb : mGeofenceCallbacks ) {
+                                cb.onGeofencesSetupUnsuccessful(status);
+                            }
                         }
                     }
                 }
@@ -280,7 +276,7 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
         notifyCallbacksOnConnectionSuccessful();
     }
 
-    protected void requestUpdates(LocationRequest locationRequest) {
+    public void requestUpdates(LocationRequest locationRequest) {
         if (isLocationServicesConnected()) {
             Log.d(TAG, "Requesting updates for [" + locationRequest + "]");
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
@@ -309,16 +305,20 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
         Log.d(TAG, "onLocationChanged [" + location + "]");
         mLastLocation = location;
         notifyCallbacksOnLocationChanged();
-        if( null != mDataCallback ){
-            mDataCallback.onNewLocation(location);
+        if( null != mLocationCallbacks ){
+            for( LocationCallbacks cb : mLocationCallbacks ) {
+                cb.onLocationChanged(location);
+            }
         }
     }
 
     @Override
     public final void onConnectionSuspended(int i) {
         Log.w(TAG, "Connection to Google Play Services suspended!");
-        if( null != mDataCallback ){
-            mDataCallback.onLocationServicesConnectionSuspended(i);
+        if( null != mConnectionCallbacks ){
+            for( ConnectionCallbacks cb : mConnectionCallbacks ) {
+                cb.onConnectionSuspended(i);
+            }
         }
     }
 
@@ -327,8 +327,10 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
         mFailedConnectionResult = connectionResult;
         Log.w(TAG, "Connection to Google Play Services failed!");
         notifyCallbacksOnConnectionFailed(connectionResult);
-        if( null != mDataCallback ){
-            mDataCallback.onLocationServicesConnectionFailed(connectionResult);
+        if( null != mConnectionCallbacks ){
+            for( ConnectionCallbacks cb : mConnectionCallbacks ) {
+                cb.onLocationServicesConnectionFailed(connectionResult);
+            }
         }
     }
 
@@ -341,7 +343,7 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
         );
     }
 
-    protected GoogleApiClient getGoogleApiClient() {
+    public GoogleApiClient getGoogleApiClient() {
         return mGoogleApiClient;
     }
 
