@@ -18,14 +18,13 @@
 package com.shiftconnects.sample;
 
 import android.location.Location;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.android.gms.location.LocationRequest;
-import com.shiftconnects.locationservices.BaseLocationActivity;
+import com.shiftconnects.locationactivity.BaseLocationActivity;
 
 
 public class MainActivity extends BaseLocationActivity {
@@ -47,7 +46,7 @@ public class MainActivity extends BaseLocationActivity {
     @Override
     public void onLocationServicesAvailable() {
         LocationRequest request = LocationRequest.create();
-        request.setInterval(1000); // One second
+        request.setInterval(10000); // Ten seconds
 
         requestLocationUpdates(request);
     }

@@ -3,6 +3,7 @@
     package="com.shiftconnects.sample" >
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -19,13 +20,11 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.shiftconnects.locationservices.BackgroundLocationService"
+        <service android:name="com.shiftconnects.locationactivity.BackgroundLocationService"
                  android:exported="false">
-
             <intent-filter>
                 <action android:name="com.shiftconnects.android.ACTION_GEOFENCE_TRANSITION"/>
             </intent-filter>
-
         </service>
     </application>
 

@@ -4,9 +4,9 @@ apply plugin: 'android-maven'
 uploadArchives {
     repositories {
         mavenInstaller {
-            pom.groupId = 'com.shiftconnects'
+            pom.groupId = 'com.shiftconnects.locationactivity'
             pom.version = '1.0.0'
-            pom.artifactId = 'locationServices'
+            pom.artifactId = 'location-activity'
             pom.project {
                 licenses {
                     license {

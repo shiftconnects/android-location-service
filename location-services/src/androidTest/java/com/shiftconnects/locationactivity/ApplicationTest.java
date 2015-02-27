@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.shiftconnects.locationservices;
+package com.shiftconnects.locationactivity;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
