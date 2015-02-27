@@ -4,6 +4,8 @@ Using android-location-activity is as easy as including and starting the backgro
 
 The ```BackgroundLocationService``` provides a whole suite of useful methods (via callbacks).
 
+[ ![Download](https://api.bintray.com/packages/inktomi/maven/com.shiftconnects.android.location/images/download.svg) ](https://bintray.com/inktomi/maven/com.shiftconnects.android.location/_latestVersion)
+
 # To Use / Dependencies
     compile('com.shiftconnects.android.location:location-service:1.3.0'){
         transitive=true
