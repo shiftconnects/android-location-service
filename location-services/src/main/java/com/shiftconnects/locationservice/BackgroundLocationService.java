@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.shiftconnects.locationactivity;
+package com.shiftconnects.locationservice;
 
 import android.app.PendingIntent;
 import android.app.Service;
@@ -44,7 +44,7 @@ import java.util.List;
  *
  * To use, simply place the following into your ApplicationManifest somewhere in the <application> tag.
  *
- * <service android:name=".service.ConsumerLocationManager"
+ * <service android:name=".service.BackgroundLocationService"
  *          android:exported="false">
  *
  *          <intent-filter>

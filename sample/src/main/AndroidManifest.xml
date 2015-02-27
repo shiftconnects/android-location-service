@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.shiftconnects.locationactivity.BackgroundLocationService"
+        <service android:name="com.shiftconnects.locationservice.BackgroundLocationService"
                  android:exported="false">
             <intent-filter>
                 <action android:name="com.shiftconnects.android.ACTION_GEOFENCE_TRANSITION"/>

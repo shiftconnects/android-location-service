@@ -37,15 +37,13 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.location.LocationRequest;
-import com.shiftconnects.locationactivity.BackgroundLocationService;
+import com.shiftconnects.locationservice.BackgroundLocationService;
 
 
 public class MainActivity extends ActionBarActivity implements GpsStatus.Listener, BackgroundLocationService.ConnectionCallbacks, BackgroundLocationService.LocationCallbacks {
     private static final String TAG = MainActivity.class.getName();
-    private Toast mToast;
 
     // Google play services stuff..
-    private static final String KEY_IN_RESOLUTION = "is_in_resolution";
     private boolean mIsInResolution;
     private boolean mShouldRetryConnecting;
 
