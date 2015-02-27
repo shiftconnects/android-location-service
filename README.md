@@ -17,7 +17,7 @@ If you do not wish to pull in our version of the Play Services, feel free to ign
 # Background services
 android-location-activity a background service so that you can continue to update locations in a single location while users move around your app. To use this, ensure you have the service defined in your ApplicationManifest as such:
 
-    <service android:name="com.shiftconnects.locationservices.BackgroundLocationService"
+    <service android:name="com.shiftconnects.android.location.BackgroundLocationService"
              android:exported="false">
         <intent-filter>
             <action android:name="com.shiftconnects.android.ACTION_GEOFENCE_TRANSITION"/>
