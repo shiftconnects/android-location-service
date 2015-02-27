@@ -1,1 +1,1 @@
-include ':location-services', ':sample'
+include ':location-service', ':sample'
