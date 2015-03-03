@@ -6,6 +6,7 @@ version = "1.4.0"
 
 def siteUrl = 'https://github.com/shiftconnects/android-location-service'      // Homepage URL of the library
 def gitUrl = 'https://github.com/shiftconnects/android-location-service.git'   // Git repository URL
+def projectDesc = 'A background service that can be used to gather location data for your Android app.'
 group = "com.shiftconnects.android.location"                                   // Maven Group ID for the artifact
 
 Properties properties = new Properties()
@@ -33,6 +34,7 @@ bintray {
     pkg {
         repo = "maven"
         name = "com.shiftconnects.android.location"
+        desc = projectDesc
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = ["Apache-2.0"]
@@ -43,6 +45,12 @@ bintray {
             gpg {
                 sign = true
                 passphrase = gpgPhrase
+            }
+            mavenCentralSync {
+                sync = true
+                user = properties.getProperty("oss.userToken")
+                password = properties.getProperty("oss.userTokenValue")
+                close = '1'
             }
         }
     }
@@ -56,7 +64,8 @@ install {
                 packaging 'aar'
 
                 // Add your description here
-                name 'A background service that can be used to gather location data for your Android app.'
+                description projectDesc
+                name "Android Location Services"
                 url siteUrl
 
                 // Set your license
