@@ -80,6 +80,8 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
     }
 
     private static final String TAG = BackgroundLocationService.class.getSimpleName();
+    
+    private static final boolean DEBUG = false;
 
     private GoogleApiClient mGoogleApiClient;
 
@@ -91,7 +93,9 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
     private ConnectionResult mFailedConnectionResult;
 
     @Override public void onCreate() {
-        Log.d(TAG, "Service created.");
+        if( DEBUG ) {
+            Log.d(TAG, "Service created.");
+        }
         super.onCreate();
         mLocationCallbacks = new ArrayList<>();
         mGeofenceCallbacks = new ArrayList<>();
@@ -115,11 +119,15 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
     private void handleCommand(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
-            Log.d(TAG, "Received an intent with action [" + action + "]");
+            if( DEBUG ) {
+                Log.d(TAG, "Received an intent with action [" + action + "]");
+            }
             if (TextUtils.equals(ACTION_GEOFENCE_TRANSITION, action)) {
                 GeofencingEvent event = GeofencingEvent.fromIntent(intent);
                 if (event.hasError()) {
-                    Log.w(TAG, "Received a geofence event with an error!");
+                    if( DEBUG ) {
+                        Log.w(TAG, "Received a geofence event with an error!");
+                    }
                     if( null != mGeofenceCallbacks ){
                         for( GeofenceCallbacks cb : mGeofenceCallbacks ) {
                             cb.onGeofenceError(event);
@@ -128,19 +136,25 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
                 } else {
                     switch (event.getGeofenceTransition()) {
                         case Geofence.GEOFENCE_TRANSITION_ENTER:
-                            Log.d(TAG, "Received a geofence ENTER event");
+                            if( DEBUG ) {
+                                Log.d(TAG, "Received a geofence ENTER event");
+                            }
                             for (Geofence geofence : event.getTriggeringGeofences()) {
                                 notifyCallbacksOnGeofenceEntered(geofence.getRequestId());
                             }
                             break;
                         case Geofence.GEOFENCE_TRANSITION_DWELL:
-                            Log.d(TAG, "Received a geofence DWELL event");
+                            if( DEBUG ) {
+                                Log.d(TAG, "Received a geofence DWELL event");
+                            }
                             for (Geofence geofence : event.getTriggeringGeofences()) {
                                 notifyCallbacksOnGeofenceDwelled(geofence.getRequestId());
                             }
                             break;
                         case Geofence.GEOFENCE_TRANSITION_EXIT:
-                            Log.d(TAG, "Received a geofence EXIT event");
+                            if( DEBUG ) {
+                                Log.d(TAG, "Received a geofence EXIT event");
+                            }
                             for (Geofence geofence : event.getTriggeringGeofences()) {
                                 notifyCallbacksOnGeofenceExited(geofence.getRequestId());
                             }
@@ -152,7 +166,9 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
     }
 
     @Override public void onDestroy() {
-        Log.d(TAG, "Service destroyed.");
+        if( DEBUG ) {
+            Log.d(TAG, "Service destroyed.");
+        }
         super.onDestroy();
         if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
@@ -233,7 +249,9 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
 
     public void setupGeofences(List<Geofence> geofences) {
         if (isLocationServicesConnected()) {
-            Log.d(TAG, "Setting up geofences [" + geofences + "]...");
+            if( DEBUG ) {
+                Log.d(TAG, "Setting up geofences [" + geofences + "]...");
+            }
             LocationServices.GeofencingApi.addGeofences(
                     getGoogleApiClient(),
                     geofences,
@@ -242,7 +260,9 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
                 @Override
                 public void onResult(Status status) {
                     if (status.isSuccess()) {
-                        Log.d(TAG, "Successfully setup geofences.");
+                        if( DEBUG ) {
+                            Log.d(TAG, "Successfully setup geofences.");
+                        }
                         if( null != mGeofenceCallbacks ){
                             for( GeofenceCallbacks cb : mGeofenceCallbacks ) {
                                 cb.onGeofencesSetupSuccessful();
@@ -262,7 +282,9 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
 
     public void removeGeofences() {
         if (isLocationServicesConnected()) {
-            Log.d(TAG, "Removing all geofences...");
+            if( DEBUG ) {
+                Log.d(TAG, "Removing all geofences...");
+            }
 
             // remove from geofencing api
             LocationServices.GeofencingApi.removeGeofences(getGoogleApiClient(), getGeofencePendingIntent());
@@ -271,14 +293,18 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
 
     @Override
     public void onConnected(Bundle bundle) {
-        Log.d(TAG, "Connected.");
+        if( DEBUG ) {
+            Log.d(TAG, "Connected.");
+        }
         mFailedConnectionResult = null;
         notifyCallbacksOnConnectionSuccessful();
     }
 
     public void requestUpdates(LocationRequest locationRequest) {
         if (isLocationServicesConnected()) {
-            Log.d(TAG, "Requesting updates for [" + locationRequest + "]");
+            if( DEBUG ) {
+                Log.d(TAG, "Requesting updates for [" + locationRequest + "]");
+            }
             LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
             Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             if (location != null) {
@@ -289,7 +315,9 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
 
     public void removeLocationUpdates() {
         if (isLocationServicesConnected()) {
-            Log.d(TAG, "Removing location updates.");
+            if( DEBUG ) {
+                Log.d(TAG, "Removing location updates.");
+            }
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
     }
@@ -302,7 +330,9 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
 
     @Override
     public final void onLocationChanged(Location location) {
-        Log.d(TAG, "onLocationChanged [" + location + "]");
+        if( DEBUG ) {
+            Log.d(TAG, "onLocationChanged [" + location + "]");
+        }
         mLastLocation = location;
         notifyCallbacksOnLocationChanged();
         if( null != mLocationCallbacks ){
@@ -314,7 +344,9 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
 
     @Override
     public final void onConnectionSuspended(int i) {
-        Log.w(TAG, "Connection to Google Play Services suspended!");
+        if( DEBUG ) {
+            Log.w(TAG, "Connection to Google Play Services suspended!");
+        }
         if( null != mConnectionCallbacks ){
             for( ConnectionCallbacks cb : mConnectionCallbacks ) {
                 cb.onConnectionSuspended(i);
@@ -325,7 +357,9 @@ public class BackgroundLocationService extends Service implements GoogleApiClien
     @Override
     public final void onConnectionFailed(ConnectionResult connectionResult) {
         mFailedConnectionResult = connectionResult;
-        Log.w(TAG, "Connection to Google Play Services failed!");
+        if( DEBUG ) {
+            Log.w(TAG, "Connection to Google Play Services failed!");
+        }
         notifyCallbacksOnConnectionFailed(connectionResult);
         if( null != mConnectionCallbacks ){
             for( ConnectionCallbacks cb : mConnectionCallbacks ) {
